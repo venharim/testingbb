@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Big Brother Simulator</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="cast-setup">
-    <h1>Big Brother Simulator</h1>
-    <form id="custom-cast-form"></form>
-    <button id="start-game">Start Simulation</button>
-  </div>
+  <div id="app">
+    <header>
+      <h1>Big Brother Simulator</h1>
+      <nav id="week-nav"></nav>
+    </header>
 
-  <div id="game-container" class="hidden">
-    <h2>Remaining Houseguests</h2>
-    <div id="houseguests" class="grid"></div>
+    <main id="main-content">
+      <section id="cast-entry" class="screen">
+        <h2>Enter Custom Cast</h2>
+        <form id="cast-form">
+          <div id="cast-inputs"></div>
+          <button type="submit">Start Game</button>
+        </form>
+      </section>
 
-    <h2>Voting History</h2>
-    <div id="voting-history-container">
-      <table id="voting-history">
-        <thead>
-          <tr id="week-header">
-            <th>Houseguest</th>
-          </tr>
-        </thead>
-        <tbody id="history-body"></tbody>
-      </table>
-    </div>
+      <section id="memory-wall" class="hidden screen">
+        <h2>Memory Wall</h2>
+        <div id="wall-container"></div>
+        <button id="begin-week">Begin Week 1</button>
+      </section>
 
-    <div id="status-area"></div>
+      <section id="game-events" class="hidden screen">
+        <div id="event-log"></div>
+        <button id="next-event">Next</button>
+      </section>
+    </main>
   </div>
 
   <script src="script.js"></script>
