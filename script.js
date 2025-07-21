@@ -94,12 +94,20 @@ function generateVotingChart(gameLog, winnerName = '', runnerUpName = '') {
     tr.appendChild(td);
     gameLog.forEach(week => {
       const cell = document.createElement('td');
-      if (week.hoh === player) cell.classList.add('hoh');
-      if (week.noms.includes(player)) cell.classList.add('nom');
+      let labels = [];
+      if (week.hoh === player) {
+        cell.classList.add('hoh');
+        labels.push('HoH');
+      }
+      if (week.noms.includes(player)) {
+        cell.classList.add('nom');
+        labels.push('Nom');
+      }
       if (week.evicted === player) {
         cell.classList.add('evicted');
-        cell.textContent = 'Evicted';
+        labels.push('Evicted');
       }
+      cell.textContent = labels.join(' + ');
       tr.appendChild(cell);
     });
     const finale = document.createElement('td');
