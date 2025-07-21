@@ -1,104 +1,112 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+#app {
+  max-width: 960px;
+  margin: auto;
   padding: 20px;
-  text-align: center;
 }
 
-h1, h2 {
-  color: #2c3e50;
-}
-
-button {
-  background-color: #2c3e50;
+header {
+  background-color: #2c2c2c;
   color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 16px;
-  margin-top: 20px;
-  cursor: pointer;
-  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-button:hover {
-  background-color: #1a252f;
+header h1 {
+  margin: 0;
+  font-size: 2rem;
 }
 
-.hidden {
+.screen {
   display: none;
 }
 
-#custom-cast-form {
-  margin-top: 20px;
-  text-align: left;
-  display: inline-block;
-}
-
-#custom-cast-form label {
+.screen.active {
   display: block;
-  margin: 5px 0;
 }
 
-.grid {
+#cast-inputs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#wall-container {
+  display: flex;
+  flex-wrap: wrap;
   gap: 15px;
-  justify-items: center;
+  justify-content: center;
   margin: 20px 0;
 }
 
-.card {
-  background-color: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  width: 120px;
-}
-
-.card img {
-  width: 100%;
-  border-radius: 4px;
-}
-
-/* Voting History Styles */
-#voting-history {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  margin-top: 20px;
-}
-
-#voting-history th, #voting-history td {
-  border: 1px solid #999;
-  padding: 6px;
-  font-size: 12px;
+.wall-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  font-size: 0.9em;
   text-align: center;
 }
 
-#voting-history th {
-  background-color: #e6e6e6;
+.wall-photo img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid #555;
 }
 
-.hoh {
-  background-color: #b2ffb2;
-  font-weight: bold;
+.wall-photo.evicted img {
+  filter: grayscale(100%);
+  opacity: 0.6;
 }
 
-.nom {
-  background-color: #cfe2ff;
+button {
+  background-color: #3742fa;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
 }
 
-.evicted {
-  background-color: #ffcccc;
-  text-decoration: line-through;
+button:hover {
+  background-color: #2f35c4;
 }
 
-.winner {
-  background-color: #90ee90;
-  font-weight: bold;
+#event-log {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  min-height: 100px;
+  margin-bottom: 20px;
 }
 
-.runner-up {
-  background-color: #d3d3d3;
-  font-style: italic;
+nav#week-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+}
+
+nav#week-nav button {
+  background: #888;
+  font-size: 0.9rem;
+}
+
+nav#week-nav button.active {
+  background-color: #3742fa;
+  color: white;
 }
