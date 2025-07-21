@@ -1,112 +1,50 @@
 body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-#app {
-  max-width: 960px;
-  margin: auto;
-  padding: 20px;
+  padding: 0;
+  text-align: center;
 }
 
 header {
-  background-color: #2c2c2c;
+  background: #222;
   color: white;
-  padding: 1rem;
-  text-align: center;
-  margin-bottom: 20px;
+  padding: 20px;
 }
 
-header h1 {
-  margin: 0;
-  font-size: 2rem;
+section {
+  margin: 30px auto;
+  max-width: 800px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-.screen {
+.hidden {
   display: none;
 }
 
-.screen.active {
-  display: block;
-}
-
-#cast-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-#wall-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-  margin: 20px 0;
-}
-
 .wall-photo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: inline-block;
+  margin: 10px;
   width: 100px;
-  font-size: 0.9em;
-  text-align: center;
 }
 
 .wall-photo img {
   width: 100px;
   height: 100px;
   object-fit: cover;
-  border-radius: 6px;
-  border: 2px solid #555;
+  border: 2px solid black;
 }
 
 .wall-photo.evicted img {
   filter: grayscale(100%);
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 button {
-  background-color: #3742fa;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s ease;
-}
-
-button:hover {
-  background-color: #2f35c4;
-}
-
-#event-log {
-  background: white;
-  padding: 15px;
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  min-height: 100px;
-  margin-bottom: 20px;
-}
-
-nav#week-nav {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding-top: 10px;
-}
-
-nav#week-nav button {
-  background: #888;
-  font-size: 0.9rem;
-}
-
-nav#week-nav button.active {
-  background-color: #3742fa;
-  color: white;
 }
