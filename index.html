@@ -2,11 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Big Brother Simulator</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="cast-setup" class="modal">
-    <h2>Enter Custom Cast</h2>
+  <div id="cast-setup">
+    <h1>Big Brother Simulator</h1>
     <form id="custom-cast-form"></form>
-    <butt
+    <button id="start-game">Start Simulation</button>
+  </div>
+
+  <div id="game-container" class="hidden">
+    <h2>Remaining Houseguests</h2>
+    <div id="houseguests" class="grid"></div>
+
+    <h2>Voting Chart</h2>
+    <table id="voting-chart">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>HOH</th>
+          <th>Nominations</th>
+          <th>POV</th>
+          <th>Evicted</th>
+          <th>Votes</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div id="status-area"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
