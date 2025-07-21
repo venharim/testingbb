@@ -1,126 +1,114 @@
-// --- Houseguest Data ---
-let houseguests = [];
-let week = 1;
-let log = [];
-let evictedPlayers = [];
+let cast = [];
+let evicted = [];
+let currentEventIndex = 0;
+let events = [];
 
-// Initialize form
-const form = document.getElementById('custom-cast-form');
-for (let i = 0; i < 16; i++) {
-  form.innerHTML += `
-    <label>Player ${i+1} Name: <input type="text" name="name-${i}" required></label>
-    <label>Image URL: <input type="text" name="img-${i}" required></label><br><br>
-  `;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const castInputs = document.getElementById("cast-inputs");
+  for (let i = 0; i < 16; i++) {
+    castInputs.innerHTML += `
+      <input type="text" placeholder="Name ${i + 1}" name="name-${i}" required>
+      <input type="text" placeholder="Image URL ${i + 1}" name="img-${i}" required>
+    `;
+  }
 
-// Start Game
-document.getElementById('start-game').addEventListener('click', () => {
-  const inputs = form.querySelectorAll('input');
-  houseguests = [];
+  document.getElementById("cast-form").addEventListener("submit", startGame);
+  document.getElementById("begin-week").addEventListener("click", startWeek);
+  document.getElementById("next-event").addEventListener("click", nextEvent);
+});
+
+function startGame(e) {
+  e.preventDefault();
+  const inputs = document.querySelectorAll("#cast-form input");
+  cast = [];
   for (let i = 0; i < inputs.length; i += 2) {
     const name = inputs[i].value.trim();
     const img = inputs[i + 1].value.trim();
-    if (name && img) houseguests.push({ name, img });
+    if (name && img) cast.push({ name, img });
   }
-  if (houseguests.length < 4) return alert('Enter at least 4 players.');
-  document.getElementById('cast-setup').classList.add('hidden');
-  document.getElementById('game-container').classList.remove('hidden');
-  renderPlayers();
-  nextWeek();
-});
+  if (cast.length < 4) return alert("Enter at least 4 houseguests.");
+  document.getElementById("cast-entry").classList.remove("screen");
+  document.getElementById("memory-wall").classList.add("active");
+  renderWall();
+}
 
-function renderPlayers() {
-  const container = document.getElementById('houseguests');
-  container.innerHTML = '';
-  houseguests.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `<img src="${p.img}" alt="${p.name}"><p>${p.name}</p>`;
-    container.appendChild(card);
+function renderWall() {
+  const container = document.getElementById("wall-container");
+  container.innerHTML = "";
+  cast.forEach(player => {
+    const div = document.createElement("div");
+    div.className = "wall-photo";
+    div.innerHTML = `<img src="${player.img}"><p>${player.name}</p>`;
+    container.appendChild(div);
   });
 }
 
-function nextWeek() {
-  if (houseguests.length <= 2) return declareWinner();
-  const hoh = pickRandom(houseguests);
-  const nominees = pickTwo(houseguests.filter(p => p !== hoh));
-  const pov = pickRandom(houseguests);
-  let vetoUsed = Math.random() < 0.5;
-  if (vetoUsed && !nominees.includes(pov)) {
-    const newNom = pickRandom(houseguests.filter(p => ![hoh, pov, ...nominees].includes(p)));
-    if (newNom) nominees[0] = newNom;
-  }
-  const voters = houseguests.filter(p => ![...nominees, hoh].includes(p));
-  const evicted = pickRandom(nominees);
-  const voteLog = voters.map(v => `${v.name} → ${evicted.name}`);
-  log.push({ week, hoh: hoh.name, noms: nominees.map(n => n.name), pov: pov.name, evicted: evicted.name, votes: voteLog });
-  evictedPlayers.push(evicted);
-  houseguests = houseguests.filter(p => p !== evicted);
-  week++;
-  renderPlayers();
-  generateVotingChart(log);
-  setTimeout(nextWeek, 1500);
+function startWeek() {
+  document.getElementById("memory-wall").classList.remove("active");
+  document.getElementById("game-events").classList.add("active");
+  generateWeekEvents();
+  currentEventIndex = 0;
+  renderEvent();
 }
 
-function declareWinner() {
-  const [f1, f2] = houseguests;
-  let juryVotes = [];
-  for (let i = 0; i < 7; i++) juryVotes.push(Math.random() < 0.5 ? f1.name : f2.name);
-  const f1Votes = juryVotes.filter(v => v === f1.name).length;
-  const winner = f1Votes > 3 ? f1.name : f2.name;
-  document.getElementById('status-area').innerHTML = `<h2>Final Two: ${f1.name} vs ${f2.name}</h2><p>Jury Votes: ${juryVotes.join(', ')}</p><h2>🏆 Winner: ${winner}</h2>`;
-  generateVotingChart(log, winner, f1.name === winner ? f2.name : f1.name);
+function generateWeekEvents() {
+  if (cast.length <= 2) return endGame();
+  const hoh = pickRandom(cast);
+  let noms = pickTwo(cast.filter(p => p !== hoh));
+  const pov = pickRandom(cast);
+  const vetoUsed = Math.random() < 0.5;
+  if (vetoUsed && !noms.includes(pov)) {
+    const replacement = pickRandom(cast.filter(p => ![hoh, pov, ...noms].includes(p)));
+    if (replacement) noms[0] = replacement;
+  }
+  const evictedPlayer = pickRandom(noms);
+  evicted.push(evictedPlayer);
+  cast = cast.filter(p => p !== evictedPlayer);
+
+  // Update wall
+  renderWallEvictions();
+
+  events = [
+    `${hoh.name} wins Head of Household.`,
+    `${hoh.name} nominates ${noms[0].name} and ${noms[1].name}.`,
+    `${pov.name} wins the Power of Veto.`,
+    vetoUsed
+      ? `${pov.name} uses the veto. ${noms[0].name} is the replacement nominee.`
+      : `${pov.name} does not use the veto.`,
+    `Houseguests vote. ${evictedPlayer.name} is evicted.`
+  ];
 }
 
-function generateVotingChart(gameLog, winnerName = '', runnerUpName = '') {
-  const header = document.getElementById('week-header');
-  const tbody = document.getElementById('history-body');
-  header.innerHTML = '<th>Houseguest</th>';
-  for (let i = 1; i <= gameLog.length; i++) {
-    const th = document.createElement('th');
-    th.textContent = `Week ${i}`;
-    header.appendChild(th);
-  }
-  const finaleTh = document.createElement('th');
-  finaleTh.textContent = 'Finale';
-  header.appendChild(finaleTh);
-
-  const players = [...new Set(gameLog.flatMap(e => [e.hoh, ...e.noms, e.pov, e.evicted]))];
-  tbody.innerHTML = '';
-  players.forEach(player => {
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.textContent = player;
-    tr.appendChild(td);
-    gameLog.forEach(week => {
-      const cell = document.createElement('td');
-      let labels = [];
-      if (week.hoh === player) {
-        cell.classList.add('hoh');
-        labels.push('HoH');
-      }
-      if (week.noms.includes(player)) {
-        cell.classList.add('nom');
-        labels.push('Nom');
-      }
-      if (week.evicted === player) {
-        cell.classList.add('evicted');
-        labels.push('Evicted');
-      }
-      cell.textContent = labels.join(' + ');
-      tr.appendChild(cell);
-    });
-    const finale = document.createElement('td');
-    if (player === winnerName) {
-      finale.classList.add('winner');
-      finale.textContent = 'Winner';
-    } else if (player === runnerUpName) {
-      finale.classList.add('runner-up');
-      finale.textContent = 'Runner-up';
+function renderWallEvictions() {
+  const photos = document.querySelectorAll(".wall-photo");
+  photos.forEach(photo => {
+    const name = photo.querySelector("p").textContent;
+    if (evicted.find(e => e.name === name)) {
+      photo.classList.add("evicted");
     }
-    tr.appendChild(finale);
-    tbody.appendChild(tr);
   });
+}
+
+function renderEvent() {
+  const log = document.getElementById("event-log");
+  log.innerHTML = `<p>${events[currentEventIndex]}</p>`;
+}
+
+function nextEvent() {
+  currentEventIndex++;
+  if (currentEventIndex < events.length) {
+    renderEvent();
+  } else {
+    // Move to next week
+    document.getElementById("game-events").classList.remove("active");
+    document.getElementById("memory-wall").classList.add("active");
+    document.getElementById("begin-week").textContent = `Begin Week ${evicted.length + 2}`;
+  }
+}
+
+function endGame() {
+  document.getElementById("event-log").innerHTML = "<h2>Game over! Final 2 reached.</h2>";
+  document.getElementById("next-event").classList.add("hidden");
 }
 
 function pickRandom(arr) {
@@ -128,9 +116,10 @@ function pickRandom(arr) {
 }
 
 function pickTwo(arr) {
-  let copy = [...arr];
-  const first = pickRandom(copy);
-  copy = copy.filter(p => p !== first);
-  const second = pickRandom(copy);
-  return [first, second];
+  const a = pickRandom(arr);
+  let b;
+  do {
+    b = pickRandom(arr);
+  } while (a === b);
+  return [a, b];
 }
