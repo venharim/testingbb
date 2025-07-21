@@ -1,7 +1,6 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
-  margin: 0;
   padding: 20px;
   text-align: center;
 }
@@ -61,20 +60,45 @@ button:hover {
   border-radius: 4px;
 }
 
-#voting-chart {
+/* Voting History Styles */
+#voting-history {
   width: 100%;
-  max-width: 900px;
-  margin: 20px auto;
   border-collapse: collapse;
-  background: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background-color: white;
+  margin-top: 20px;
 }
 
-#voting-chart th, #voting-chart td {
-  padding: 10px;
-  border: 1px solid #ccc;
+#voting-history th, #voting-history td {
+  border: 1px solid #999;
+  padding: 6px;
+  font-size: 12px;
+  text-align: center;
 }
 
-#status-area {
-  margin-top: 30px;
+#voting-history th {
+  background-color: #e6e6e6;
+}
+
+.hoh {
+  background-color: #b2ffb2;
+  font-weight: bold;
+}
+
+.nom {
+  background-color: #cfe2ff;
+}
+
+.evicted {
+  background-color: #ffcccc;
+  text-decoration: line-through;
+}
+
+.winner {
+  background-color: #90ee90;
+  font-weight: bold;
+}
+
+.runner-up {
+  background-color: #d3d3d3;
+  font-style: italic;
 }
